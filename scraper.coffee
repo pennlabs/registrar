@@ -14,104 +14,125 @@ DAYS =
     'F' : 'friday'
 
 
+# Matches the first line of a registrar formatted course
+coursePattern = ///
+    ^(\w{2,5})  # department code
+    \s?\s?
+    -(\d+)      # course number
+    \s+
+    (\D*)       # course name
+    \s+
+    (\d\.?\d?)  # credits
+    .*
+    ///
+
+# Matches the second line of a registrar formatted course
+sectionPattern = ///
+    (\d{3})             # section number
+    \s+
+    (\w{3})             # section type (LEC | REC)
+    \s+
+    (.*(AM|PM|NOON|TBA))# day and time
+    \s+
+    (\w+)               # location / room
+    \s
+    ([A-Za-z0-9]+)      # room number
+    \s+
+    (.*)                # professor name
+    ///
+
+
+module.exports =
 # Parse hours from a formatted string
 # >>> getHours "M 4:30-5:30PM"
 # ['monday']
-getDays = (str) ->
-  str = str.match(/[a-zA-Z]+/)[0]
-  DAYS[ch] for ch in str when DAYS[ch]
+    getDays: (str) ->
+      str = str.match(/[a-zA-Z]+/)[0]
+      DAYS[ch] for ch in str when DAYS[ch]
 
 
 # Parse hours from a formatted string
 # >>> getHours "M 4:30-5:30PM"
 # ["4:30", "5:30"]
-getHours = (str) ->
-  str = str.match(/([0-9:]+)-([0-9:]+)/)
-  [str[1], str[2]]
+    getHours: (str) ->
+      str = str.match(/([0-9:]+)-([0-9:]+)/)
+      [str[1], str[2]]
 
 
-# Matches the first line of a registrar formatted course
-firstLinePattern = /// /^
-    (\w{2,5})   # department code
-    \s?\s?      # white space
-    -(\d{3})    # course number
-    \s+         # white space
-    (\w+.*?)    # course name
-    \s+         # white space
-    \d/         # number (credit)
-    ///
+    parseCourse: (line) ->
+        match = coursePattern.exec(line)
+        if match
+            course =
+                'num': match[2]
+                'title': match[3]
+                'credits': match[4]
+            return course
 
 
-# Matches the second line of a registrar formatted course
-infoLineNormalPattern = ///
-    (\d{3})             # section number
-    \s+
-    (\w{3})             # section type (LEC | REC)
-    \s+
-    (.*(AM|PM|NOON))    # day and time
-    \s+
-    (\w+)               # location / room
-    \s
-    ([A-Za-z0-9]+)      # professor name
-    \s+
-    (.*)                # consume everything else
-    ///
+    # Parse all the courses in a department
+    parseDept: (dept, cb) ->
+        jsdom.env("http://www.upenn.edu/registrar/roster/#{dept}.html", [
+            'http://code.jquery.com/jquery-1.8.1.min.js'
+          ], (errors, window) ->
+            $ = window.$
+
+            # Get each line in the file
+            lines = $('pre p:last-child').text().split('\n')
+
+            course = null
+            # iterate through each of the lines and
+            #   -   try to match using the first line pattern
+            #       -   if it works, grab the cousenum and title
+            #       -   otherwise, try the second pattern
+            #           - if it works, create a new object
+            #           - otherwise, do nothing
+            _.each(lines, (line) ->
+              course = (parseCourse line) or course
+              log line
+              if course?
+                  log course
+              if not course?
+                section = sectionPattern.exec(line)
+                if section
+                  log "section match"
+                  doc =
+                    dept          : dept
+                    title         : course.title
+                    course_num    : course.num
+                    section_num   : section[1]
+                    type          : section[2]
+                    times         : section[3]
+                    days          : getDays section[3]
+                    hours         : getHours section[3]
+                    building      : section[5]
+                    room_num      : section[6]
+                    prof          : section[7]
+
+                  log "cb is had"
+                  cb? doc
+            )
+        )
 
 
-# Parse all the courses in a department
-parseDept = (item, cb) ->
-    jsdom.env("http://www.upenn.edu/registrar/roster/#{item}.html", [
+# Get each department and do something with it
+    withDepts: (cb) ->
+      jsdom.env('http://www.upenn.edu/registrar/roster/index.html', [
         'http://code.jquery.com/jquery-1.8.1.min.js'
       ], (errors, window) ->
-        $ = window.$
+      $ = window.$
 
-        classes = $('pre p:last-child').text().split('\n')
+          # The roster page doesn't use ids, so we are forced to identify the
+          # table by checking content in it
+          depts = $('tr:contains("Accounting")')[1]
 
-        curCourseNum = ""
-        curTitle = ""
-
-        _.each(classes, (cls) ->
-          # try to match using the first line pattern
-          # if it works, grab the cousenum and title
-          # otherwise, match the second line and use the coursenum and title
-          # to create a new object
-          firstLine = firstLinePattern.exec(cls)
-          if firstLine
-            curCourseNum = firstLine[2]
-            curTitle = firstLine[3]
-          else
-            infoLine = infoLineNormalPattern.exec(cls)
-            if infoLine
-              doc =
-                dept          : item
-                title         : curTitle
-                course_num    : curCourseNum
-                section_num   : infoLine[1]
-                type          : infoLine[2]
-                times         : infoLine[3]
-                days          : getDays infoLine[3]
-                hours         : getHours infoLine[3]
-                building      : infoLine[5]
-                room_num      : infoLine[6]
-                prof          : infoLine[7]
-
-              cb?(doc)
+          $(depts).find('tr').each (i, el) ->
+            dept = $(el).find('td').eq(0).text()
+            cb? dept
         )
-    )
 
 
-# Main function
-jsdom.env('http://www.upenn.edu/registrar/roster/index.html', [
-    'http://code.jquery.com/jquery-1.8.1.min.js'
-  ], (errors, window) ->
-    $ = window.$
-
-    # Doesn't use ids
-    # Find the table containing "Accounting"
-    depts = $('tr:contains("Accounting")')[1]
-
-    $(depts).find('tr').each (i, el) ->
-      dept = $(el).find('td').eq(0).text()
+    main: ->
+      log "hello"
       # Log a JSON representation of each of the courses in a department
-      parseDept dept.toLowerCase(), log
-)
+      withDepts (dept) ->
+        parseDept dept.toLowerCase(), log
