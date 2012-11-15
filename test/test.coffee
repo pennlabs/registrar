@@ -16,6 +16,8 @@ describe 'getDays', () ->
 describe 'getHours', () ->
   it "should return ['4:30', '5:30'] when 4:30 and 5:30 are present", ->
     expect(scraper.getHours "M 4:30-5:30PM").to.deep.equal(['4:30', '5:30'])
+  it "should return ['9', '10:30'] when 9 and 10:30 are present", ->
+    expect(scraper.getHours "M 9-10:30AM").to.deep.equal(['9', '10:30'])
 
 
 describe 'parseCourse', () ->
@@ -47,3 +49,43 @@ describe 'parseCourse', () ->
   it "should return undefined if there is no match", ->
     line = "     MBA COURSE"
     expect(scraper.parseCourse(line)).to.equal(undefined)
+
+
+describe 'parseSection', () ->
+  dept = 'acct'
+  course =
+      title: 'AUDITING'
+      num: '718'
+  line = "001 LEC MW 9-10:30AM JMHH F50         FISCHER P"
+  section = scraper.parseSection dept, course, line
+  it "should have dept", ->
+    expect(section.dept).to.deep.equal('acct')
+  it "should have title", ->
+    expect(section.title).to.deep.equal('AUDITING')
+  it "should have course_num", ->
+    expect(section.course_num).to.deep.equal('718')
+  it "should have section_num", ->
+    expect(section.section_num).to.deep.equal('001')
+  it "should have type", ->
+    expect(section.type).to.deep.equal('LEC')
+  it "should have times", ->
+    expect(section.times).to.deep.equal('MW 9-10:30AM')
+  it "should have days", ->
+    expect(section.days).to.deep.equal(['monday', 'wednesday'])
+  it "should have hours", ->
+    expect(section.hours).to.deep.equal(['9', '10:30'])
+  it "should have building", ->
+    expect(section.building).to.deep.equal('JMHH')
+  it "should have room_num", ->
+    expect(section.room_num).to.deep.equal('F50')
+  it "should have prof", ->
+    expect(section.prof).to.deep.equal('FISCHER P')
+
+
+describe 'getSections', () ->
+  it "should get each section in a department", ->
+    count = 0
+    scraper.getSections "cis", (section) =>
+      console.log section.title
+      count += 1
+    expect(count).to.equal(10)
