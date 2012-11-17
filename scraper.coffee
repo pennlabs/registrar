@@ -2,7 +2,6 @@ jsdom = require('jsdom')
 url = require('url')
 async = require('async')
 _ = require('underscore')
-log = console.log
 
 
 ROSTER = "http://www.upenn.edu/registrar/roster/index.html"
@@ -47,8 +46,8 @@ sectionPattern = ///
 
 
 module.exports =
-    # Parse hours from a formatted string
-    # >>> getHours "M 4:30-5:30PM"
+    # Parse days from a formatted string
+    # >>> getDays "M 4:30-5:30PM"
     # ['monday']
     getDays: (str) ->
       str = str.match(/[a-zA-Z]+/)[0]
@@ -77,7 +76,6 @@ module.exports =
 
     parseSection: (dept, course, line) ->
       match = sectionPattern.exec(line)
-      console.log sectionPattern
       if match
         section =
           dept          : dept
