@@ -91,7 +91,7 @@ module.exports =
 
     # Reach each line in the roster of a department
     readRoster: (dept, cb) ->
-      jsdom.env "http://www.upenn.edu/registrar/roster/#{dept}.html", [
+      jsdom.env "http://www.upenn.edu/registrar/roster/#{dept.toLowerCase()}.html", [
           JQUERY
         ], (errors, window) ->
           $ = window.$
