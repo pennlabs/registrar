@@ -1,6 +1,4 @@
 jsdom = require('jsdom')
-url = require('url')
-async = require('async')
 _ = require('underscore')
 
 
@@ -53,7 +51,6 @@ module.exports =
       str = str.match(/[a-zA-Z]+/)[0]
       DAYS[ch] for ch in str when DAYS[ch]
 
-
     # TODO: Get meridian at some point
 
     # Parse hours from a formatted string
@@ -68,9 +65,9 @@ module.exports =
       match = coursePattern.exec(line)
       if match
         course =
-          'num': match[2]
-          'title': match[3]
-          'credits': match[4]
+          num     : match[2]
+          title   : match[3].trim()
+          credits : match[4]
         return course
 
 
@@ -106,14 +103,14 @@ module.exports =
 
     # Parse all the courses in a department
     getSections: (dept, cb) ->
-      @readRoster dept, ->
+      @readRoster dept, (lines) =>
         course = null
         _.each lines, (line) =>
-          course = (@parseCourse line) or course
-          if not course?
-            section = @parseSection line
-            if section?
-              cb? section
+          if newCourse = @parseCourse line
+            course = newCourse
+          else
+            section = @parseSection dept, course, line
+            cb? section if section?
 
 
     # Get each department and do something with it
