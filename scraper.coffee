@@ -1,5 +1,4 @@
 jsdom = require('jsdom')
-_ = require('underscore')
 
 
 ROSTER = "http://www.upenn.edu/registrar/roster/index.html"
@@ -77,14 +76,14 @@ module.exports =
         section =
           dept          : dept
           title         : course.title
-          course_num    : course.num
-          section_num   : match[1]
+          courseNumber  : course.num
+          sectionNumber : match[1]
           type          : match[2]
           times         : match[3]
           days          : @getDays match[3]
           hours         : @getHours match[3]
           building      : match[5]
-          room_num      : match[6]
+          roomNumber    : match[6]
           prof          : match[7]
         return section
 
@@ -105,7 +104,7 @@ module.exports =
     getSections: (dept, cb) ->
       @readRoster dept, (lines) =>
         course = null
-        _.each lines, (line) =>
+        lines.forEach (line) =>
           if newCourse = @parseCourse line
             course = newCourse
           else
