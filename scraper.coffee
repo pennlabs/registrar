@@ -1,7 +1,4 @@
 jsdom = require('jsdom')
-url = require('url')
-async = require('async')
-_ = require('underscore')
 
 
 ROSTER = "http://www.upenn.edu/registrar/roster/index.html"
@@ -53,7 +50,6 @@ module.exports =
       str = str.match(/[a-zA-Z]+/)[0]
       DAYS[ch] for ch in str when DAYS[ch]
 
-
     # TODO: Get meridian at some point
 
     # Parse hours from a formatted string
@@ -68,9 +64,9 @@ module.exports =
       match = coursePattern.exec(line)
       if match
         course =
-          'num': match[2]
-          'title': match[3]
-          'credits': match[4]
+          num     : match[2]
+          title   : match[3].trim()
+          credits : match[4]
         return course
 
 
@@ -80,21 +76,21 @@ module.exports =
         section =
           dept          : dept
           title         : course.title
-          course_num    : course.num
-          section_num   : match[1]
+          courseNumber  : course.num
+          sectionNumber : match[1]
           type          : match[2]
           times         : match[3]
           days          : @getDays match[3]
           hours         : @getHours match[3]
           building      : match[5]
-          room_num      : match[6]
+          roomNumber    : match[6]
           prof          : match[7]
         return section
 
 
     # Reach each line in the roster of a department
     readRoster: (dept, cb) ->
-      jsdom.env "http://www.upenn.edu/registrar/roster/#{dept}.html", [
+      jsdom.env "http://www.upenn.edu/registrar/roster/#{dept.toLowerCase()}.html", [
           JQUERY
         ], (errors, window) ->
           $ = window.$
@@ -106,14 +102,14 @@ module.exports =
 
     # Parse all the courses in a department
     getSections: (dept, cb) ->
-      @readRoster dept, ->
+      @readRoster dept, (lines) =>
         course = null
-        _.each lines, (line) =>
-          course = (@parseCourse line) or course
-          if not course?
-            section = @parseSection line
-            if section?
-              cb? section
+        lines.forEach (line) =>
+          if newCourse = @parseCourse line
+            course = newCourse
+          else
+            section = @parseSection dept, course, line
+            cb? section if section?
 
 
     # Get each department and do something with it
