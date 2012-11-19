@@ -86,6 +86,5 @@ describe 'getSections', () ->
   it "should get each section in a department", ->
     count = 0
     scraper.getSections "cis", (section) =>
-      console.log section.title
-      count += 1
-    expect(count).to.equal(10)
+      count++
+      expect(count).to.equal(10)
