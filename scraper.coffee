@@ -115,7 +115,7 @@ module.exports =
 
 
     # Get each department and do something with it
-    getDepartments: (cb, success) ->
+    getDepartments: (cb) ->
       jsdom.env ROSTER, [
         JQUERY
       ], (errors, window) ->
@@ -123,9 +123,10 @@ module.exports =
 
         # The roster page doesn't use ids, so we are forced to identify the
         # table by checking content in it
-        depts = $('tr:contains("Accounting")')[1]
+        department_rows = $('tr:contains("Accounting")')[1]
 
-        $(depts).find('tr').each (i, el) ->
+        depts = []
+        $(department_rows).find('tr').each (i, el) ->
           dept = $(el).find('td').eq(0).text()
-          cb? dept
-        success?()
+          depts.push dept
+        cb? depts
