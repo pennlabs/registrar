@@ -101,7 +101,7 @@ module.exports =
 
 
     # Parse all the courses in a department
-    getSections: (dept, cb) ->
+    getSections: (dept, cb, success) ->
       @readRoster dept, (lines) =>
         course = null
         lines.forEach (line) =>
@@ -110,6 +110,7 @@ module.exports =
           else
             section = @parseSection dept, course, line
             cb? section if section?
+        success?()
 
 
     # Get each department and do something with it

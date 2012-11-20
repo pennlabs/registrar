@@ -62,10 +62,10 @@ describe 'parseSection', () ->
     expect(section.dept).to.deep.equal('acct')
   it "should have title", ->
     expect(section.title).to.deep.equal('AUDITING')
-  it "should have course_num", ->
-    expect(section.course_num).to.deep.equal('718')
-  it "should have section_num", ->
-    expect(section.section_num).to.deep.equal('001')
+  it "should have courseNumber", ->
+    expect(section.courseNumber).to.deep.equal('718')
+  it "should have sectionNumber", ->
+    expect(section.sectionNumber).to.deep.equal('001')
   it "should have type", ->
     expect(section.type).to.deep.equal('LEC')
   it "should have times", ->
@@ -76,15 +76,18 @@ describe 'parseSection', () ->
     expect(section.hours).to.deep.equal(['9', '10:30'])
   it "should have building", ->
     expect(section.building).to.deep.equal('JMHH')
-  it "should have room_num", ->
-    expect(section.room_num).to.deep.equal('F50')
+  it "should have roomNumber", ->
+    expect(section.roomNumber).to.deep.equal('F50')
   it "should have prof", ->
     expect(section.prof).to.deep.equal('FISCHER P')
 
 
 describe 'getSections', () ->
-  it "should get each section in a department", ->
-    count = 0
-    scraper.getSections "cis", (section) =>
-      count++
-      expect(count).to.equal(10)
+  @timeout(0)
+  sections = []
+  before (done) =>
+    scraper.getSections "cis", ((section) =>
+      sections.push section), =>
+        done()
+  it "should get each section in a department", =>
+    expect(sections.length).to.equal(142)
