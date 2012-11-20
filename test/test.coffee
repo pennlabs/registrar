@@ -84,12 +84,20 @@ describe 'parseSection', () ->
 
 describe 'getSections', () ->
   @timeout(0)
+  sections = null
+  before (done) =>
+    scraper.getSections "cis", (_sections) =>
+      sections = _sections
+      done()
   it "should get each section in a department", =>
-    scraper.getSections "cis", (sections) ->
-      expect(sections.length).to.equal(142)
+    expect(sections.length).to.equal(142)
 
 describe 'getDepartments', () ->
   @timeout(0)
+  depts = null
+  before (done) =>
+    scraper.getDepartments (_depts) =>
+      depts = _depts
+      done()
   it "should get each department", =>
-    scraper.getDepartments (depts) ->
-      expects(depts.length).to.equal(145)
+    expect(depts.length).to.equal(145)
