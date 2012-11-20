@@ -114,7 +114,7 @@ module.exports =
 
 
     # Get each department and do something with it
-    getDepartments: (cb) ->
+    getDepartments: (cb, success) ->
       jsdom.env ROSTER, [
         JQUERY
       ], (errors, window) ->
@@ -127,3 +127,4 @@ module.exports =
         $(depts).find('tr').each (i, el) ->
           dept = $(el).find('td').eq(0).text()
           cb? dept
+        success?()

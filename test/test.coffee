@@ -91,3 +91,13 @@ describe 'getSections', () ->
         done()
   it "should get each section in a department", =>
     expect(sections.length).to.equal(142)
+
+describe 'getDepartments', () ->
+  @timeout(0)
+  departments = []
+  before (done) =>
+    scraper.getDepartments ((department) =>
+      departments.push department), =>
+        done()
+  it "should get each department", =>
+    expect(departments.length).to.equal(145)
