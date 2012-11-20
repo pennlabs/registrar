@@ -101,16 +101,17 @@ module.exports =
 
 
     # Parse all the courses in a department
-    getSections: (dept, cb, success) ->
+    getSections: (dept, cb) ->
       @readRoster dept, (lines) =>
+        sections = []
         course = null
         lines.forEach (line) =>
           if newCourse = @parseCourse line
             course = newCourse
           else
             section = @parseSection dept, course, line
-            cb? section if section?
-        success?()
+            sections.push section if section?
+        cb? sections
 
 
     # Get each department and do something with it
