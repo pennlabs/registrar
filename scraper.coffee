@@ -136,8 +136,6 @@ module.exports =
         # table by checking content in it
         department_rows = $('tr:contains("Accounting")')[1]
 
-        depts = []
-        $(department_rows).find('tr').each (i, el) ->
-          dept = $(el).find('td').eq(0).text()
-          depts.push dept
+        depts = $(department_rows).find('tr').map (i, el) ->
+          return $(el).find('td').eq(0).text()
         cb? depts
