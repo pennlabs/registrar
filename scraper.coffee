@@ -88,30 +88,41 @@ module.exports =
         return section
 
 
-    # Reach each line in the roster of a department
-    readRoster: (dept, cb) ->
+    # Read each line in the roster of a department
+    readRoster: (dept, parseLine, cb) ->
       jsdom.env "http://www.upenn.edu/registrar/roster/#{dept.toLowerCase()}.html", [
           JQUERY
         ], (errors, window) ->
           $ = window.$
 
-          # Get each line in the file
+          # Get each line in the file and parse it
           lines = $('pre p:last-child').text().split('\n')
-          cb? lines
+          lines.forEach parseLine if parseLine
+          cb?()
 
 
     # Parse all the courses in a department
+    getCourses: (dept, cb) ->
+      courses = []
+      parseLine = (line) =>
+        course = @parseCourse line
+        courses.push course if course?
+      success = => cb? courses
+      @readRoster dept, parseLine, success
+
+
+    # Parse all the sections in a department
     getSections: (dept, cb) ->
-      @readRoster dept, (lines) =>
-        sections = []
-        course = null
-        lines.forEach (line) =>
-          if newCourse = @parseCourse line
-            course = newCourse
-          else
-            section = @parseSection dept, course, line
-            sections.push section if section?
-        cb? sections
+      sections = []
+      course = null
+      parseLine = (line) =>
+        if newCourse = @parseCourse line
+          course = newCourse
+        else
+          section = @parseSection dept, course, line
+          sections.push section if section?
+      success = => cb? sections
+      @readRoster dept, parseLine, success
 
 
     # Get each department and do something with it
