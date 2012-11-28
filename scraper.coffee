@@ -47,8 +47,8 @@ module.exports =
     # >>> getDays "M 4:30-5:30PM"
     # ['monday']
     getDays: (str) ->
-      str = str.match(/[a-zA-Z]+/)[0]
-      DAYS[ch] for ch in str when DAYS[ch]
+      days = str.match(/[a-zA-Z]+/)[0]
+      DAYS[day] for day in days when DAYS[day]
 
     # TODO: Get meridian at some point
 
@@ -56,8 +56,8 @@ module.exports =
     # >>> getHours "M 4:30-5:30PM"
     # ["4:30", "5:30"]
     getHours: (str) ->
-      str = str.match(/([0-9:]+)-([0-9:]+)/)
-      [str[1], str[2]]
+      hours = str.match(/([0-9:]+)-([0-9:]+)/)
+      [hours[1], hours[2]]
 
 
     parseCourse: (line) ->
@@ -77,6 +77,7 @@ module.exports =
           dept          : dept
           title         : course.title
           courseNumber  : course.num
+          credits       : course.credits
           sectionNumber : match[1]
           type          : match[2]
           times         : match[3]
