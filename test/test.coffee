@@ -101,3 +101,13 @@ describe 'getDepartments', () ->
       done()
   it "should get each department", =>
     expect(depts.length).to.equal(145)
+
+describe 'getCourses', () ->
+  @timeout(0)
+  courses = null
+  before (done) =>
+    scraper.getCourses "cis", (_courses) =>
+      courses = _courses
+      done()
+  it "should get each course in the department", =>
+    expect(courses.length).to.equal(94)
