@@ -96,7 +96,7 @@ module.exports =
         ], (errors, window) ->
           $ = window.$
           # Get each line in the file and parse it
-          lines = $('pre p:last-child').text().split('\n')
+          lines = $('pre p:last').text().split('\n')
           lines.forEach parseLine if parseLine
           cb? lines
 

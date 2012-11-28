@@ -86,11 +86,11 @@ describe 'getSections', () ->
   @timeout(0)
   sections = null
   before (done) =>
-    scraper.getSections "cis", (_sections) =>
+    scraper.getSections "grek", (_sections) =>
       sections = _sections
       done()
   it "should get each section in a department", =>
-    expect(sections.length).to.equal(142)
+    expect(sections.length).to.equal(6)
 
 describe 'getDepartments', () ->
   @timeout(0)
@@ -106,8 +106,8 @@ describe 'getCourses', () ->
   @timeout(0)
   courses = null
   before (done) =>
-    scraper.getCourses "cis", (_courses) =>
+    scraper.getCourses "anat", (_courses) =>
       courses = _courses
       done()
   it "should get each course in the department", =>
-    expect(courses.length).to.equal(94)
+    expect(courses.length).to.equal(2)
