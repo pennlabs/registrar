@@ -2,7 +2,7 @@ jsdom = require('jsdom')
 
 
 ROSTER = "http://www.upenn.edu/registrar/roster/index.html"
-JQUERY = "http://code.jquery.com/jquery-1.8.1.min.js"
+JQUERY = "http://code.jquery.com/jquery-1.8.3.min.js"
 
 
 # Map from day code to long name
@@ -95,11 +95,10 @@ module.exports =
           JQUERY
         ], (errors, window) ->
           $ = window.$
-
           # Get each line in the file and parse it
           lines = $('pre p:last-child').text().split('\n')
           lines.forEach parseLine if parseLine
-          cb?()
+          cb? lines
 
 
     # Parse all the courses in a department
