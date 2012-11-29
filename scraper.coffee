@@ -96,9 +96,9 @@ module.exports =
         ], (errors, window) ->
           $ = window.$
           # Get each line in the file and parse it
-          lines = $('pre p:last').text().split('\n')
-          lines.forEach parseLine if parseLine
-          cb? lines
+          courses = $('pre p:last').text().split /\n\s*\n/
+          courses.forEach parseLine if parseLine
+          cb? courses
 
 
     # Parse all the courses in a department
