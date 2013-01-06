@@ -4,6 +4,7 @@
   "description": "",
   "dependencies": {
     "mocha": ">= 1.7.0",
+    "chai": "*",
     "jsdom": ">= 0.2.15"
   },
   "engine": "node 0.8.8"
