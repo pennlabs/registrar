@@ -57,6 +57,7 @@ module.exports =
     # ["4:30", "5:30"]
     getHours: (str) ->
       hours = str.match(/([0-9:]+)-([0-9:]+)/)
+      return [] if !hours
       [hours[1], hours[2]]
 
 
