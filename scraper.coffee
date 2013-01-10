@@ -90,46 +90,47 @@ module.exports =
 
 
     # Read each line in the roster of a department
-    readRoster: (dept, parseLine, cb) ->
-      jsdom.env "http://www.upenn.edu/registrar/roster/#{dept.toLowerCase()}.html", [
-          JQUERY
-        ], (errors, window) ->
+    readRoster: (dept, parse, cb) ->
+      jsdom.env "http://www.upenn.edu/registrar/roster/#{dept.toLowerCase()}.html", [JQUERY], (errors, window) ->
           $ = window.$
           # Get each line in the file and parse it
-          lines = $('pre p:last').text().split('\n')
-          lines.forEach parseLine if parseLine
-          cb? lines
+          courses = $('pre p:last').text().split /\n\s*\n/
+          courses.forEach parse if parse
+          cb? courses
 
 
     # Parse all the courses in a department
     getCourses: (dept, cb) ->
       courses = []
-      parseLine = (line) =>
-        course = @parseCourse line
+      parse = (block) =>
+        lines = block.split '\n'
+        # first line is course line
+        course = @parseCourse lines[0]
         courses.push course if course?
       success = => cb? courses
-      @readRoster dept, parseLine, success
+      @readRoster dept, parse, success
 
 
     # Parse all the sections in a department
     getSections: (dept, cb) ->
       sections = []
       course = null
-      parseLine = (line) =>
-        if newCourse = @parseCourse line
-          course = newCourse
-        else
+      parse = (block) =>
+        lines = block.split '\n'
+        # first line is course line
+        course = @parseCourse lines[0]
+        return if !course
+        # check every other line for a section
+        for line in lines
           section = @parseSection dept, course, line
           sections.push section if section?
       success = => cb? sections
-      @readRoster dept, parseLine, success
+      @readRoster dept, parse, success
 
 
     # Get each department and do something with it
     getDepartments: (cb) ->
-      jsdom.env ROSTER, [
-        JQUERY
-      ], (errors, window) ->
+      jsdom.env ROSTER, [JQUERY], (errors, window) ->
         $ = window.$
 
         # The roster page doesn't use ids, so we are forced to identify the
