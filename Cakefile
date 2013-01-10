@@ -34,7 +34,7 @@ buildTests = (cb) ->
 test = (cb) ->
   buildSrc ->
     buildTests ->
-      ps = spawn "mocha"
+      ps = spawn "mocha", ['-c']
       ps.stdout.on 'data', (data) ->
         print data.toString()
       ps.stderr.on 'data', (data) ->
