@@ -1,9 +1,13 @@
 UPenn Registrar Course Scraper
 ================
 
+A CoffeeScript module that scrapes the UPenn Registrar. Please install [node](nodejs.org) and [CoffeeScript](coffeescript.org).
+
 # Quick Start
 
 To build the CoffeeScript simple run `npm install && cake build`
+
+Start an interactive CoffeeScript shell with `coffee`
 
 Create a scraper object
 ``` coffeescript
