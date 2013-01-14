@@ -16,8 +16,20 @@ Scraper = require "./scraper"
 
 Print the list of departments
 ``` coffeescript
-Scraper.getDepartments (depts) ->
-  console.log depts
+Scraper.getDepartments (depts) -> console.log depts
+> [ 'ACCT',
+    'AFST',
+    'AFRC',
+    'AMCS',
+    'ANCH',
+    'ANEL',
+    'ANTH',
+    'ARAB',
+    'ARCH',
+    'AAMW',
+    'ARTH',
+    ...
+  ]
 ```
 
 Print all the MATH courses
