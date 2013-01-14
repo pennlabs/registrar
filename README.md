@@ -3,7 +3,7 @@ Course Scraper
 
 ## Quick Start
 
-To build the CoffeeScript simple run `cake build`
+To build the CoffeeScript simple run `npm install && cake build`
 
 Create a scraper object
 ``` coffeescript
