@@ -6,6 +6,40 @@ expect = chai.expect
 scraper = require("../scraper")
 
 
+describe 'getSections', () ->
+  @timeout(0)
+  sections = null
+  before (done) =>
+    scraper.getSections "grek", (_sections) =>
+      sections = _sections
+      done()
+  it "should get each section in a department", =>
+    expect(sections.length).to.equal(6)
+
+
+describe 'getDepartments', () ->
+  @timeout(0)
+  depts = null
+  before (done) =>
+    scraper.getDepartments (_depts) =>
+      depts = _depts
+      done()
+  it "should get each department", =>
+    expect(depts.length).to.equal(148)
+
+
+describe 'getCourses', () ->
+  @timeout(0)
+  courses = null
+  before (done) =>
+    scraper.getCourses "grek", (_courses) =>
+      courses = _courses
+      done()
+  it "should get each course in the department", =>
+    # grek has 3 courses that are TBA so they have no sections
+    expect(courses.length).to.equal(9)
+
+
 describe 'getDays', () ->
   it "should return monday when M is present", ->
     expect(scraper.getDays 'M').to.deep.equal(['monday'])
@@ -80,34 +114,3 @@ describe 'parseSection', () ->
     expect(section.roomNumber).to.deep.equal('F50')
   it "should have prof", ->
     expect(section.prof).to.deep.equal('FISCHER P')
-
-
-describe 'getSections', () ->
-  @timeout(0)
-  sections = null
-  before (done) =>
-    scraper.getSections "grek", (_sections) =>
-      sections = _sections
-      done()
-  it "should get each section in a department", =>
-    expect(sections.length).to.equal(6)
-
-describe 'getDepartments', () ->
-  @timeout(0)
-  depts = null
-  before (done) =>
-    scraper.getDepartments (_depts) =>
-      depts = _depts
-      done()
-  it "should get each department", =>
-    expect(depts.length).to.equal(145)
-
-describe 'getCourses', () ->
-  @timeout(0)
-  courses = null
-  before (done) =>
-    scraper.getCourses "anat", (_courses) =>
-      courses = _courses
-      done()
-  it "should get each course in the department", =>
-    expect(courses.length).to.equal(2)
