@@ -20,14 +20,6 @@ Scraper.getDepartments (depts) -> console.log depts
 > [ 'ACCT',
     'AFST',
     'AFRC',
-    'AMCS',
-    'ANCH',
-    'ANEL',
-    'ANTH',
-    'ARAB',
-    'ARCH',
-    'AAMW',
-    'ARTH',
     ...
   ]
 ```
@@ -48,6 +40,20 @@ Print all the CIS courses with their sections
 ``` coffeescript
 Scraper.getSections "cis", (sections) ->
   console.log sections
+> [ { dept: 'cis',
+      title: 'INTRO TO COMP PROG',
+      courseNumber: '110',
+      credits: '1',
+      sectionNumber: '001',
+      type: 'LEC',
+      times: 'MWF 10-11AM',
+      days: [ 'monday', 'wednesday', 'friday' ],
+      hours: [ '10', '11' ],
+      building: 'TOWN',
+      roomNumber: '100',
+      prof: 'BROWN B' },
+    ...
+  ]
 ```
 
 Get all the courses and sections for each department
