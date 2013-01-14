@@ -1,4 +1,4 @@
-jsdom = require('jsdom')
+jsdom = require 'jsdom'
 
 
 ROSTER = "http://www.upenn.edu/registrar/roster/index.html"
@@ -62,7 +62,7 @@ module.exports =
 
 
     parseCourse: (line) ->
-      match = coursePattern.exec(line)
+      match = coursePattern.exec line
       if match
         course =
           num     : match[2]
@@ -72,7 +72,7 @@ module.exports =
 
 
     parseSection: (dept, course, line) ->
-      match = sectionPattern.exec(line)
+      match = sectionPattern.exec line
       if match
         section =
           dept          : dept
@@ -93,11 +93,11 @@ module.exports =
     # Read each line in the roster of a department
     readRoster: (dept, parse, cb) ->
       jsdom.env "http://www.upenn.edu/registrar/roster/#{dept.toLowerCase()}.html", [JQUERY], (errors, window) ->
-          $ = window.$
-          # Get each line in the file and parse it
-          courses = $('pre p:last').text().split /\n\s*\n/
-          courses.forEach parse if parse
-          cb? courses
+        $ = window.$
+        # Get each course block in the file and parse it
+        courses = $('pre p:last').text().split /\n\s*\n/
+        courses.forEach parse if parse
+        cb? courses
 
 
     # Parse all the courses in a department
