@@ -32,10 +32,16 @@ Scraper.getDepartments (depts) -> console.log depts
   ]
 ```
 
-Print all the MATH courses
+Print all the CIS courses
 ``` coffeescript
-Scraper.getCourses "math", (courses) ->
+Scraper.getCourses "cis", (courses) ->
   console.log courses
+> [ { num: '099', title: 'UGRAD RESRCH/IND STUDY', credits: '1' },
+    { num: '110', title: 'INTRO TO COMP PROG', credits: '1' },
+    { num: '120', title: 'PROG LANG & TECH I', credits: '1' },
+    { num: '121', title: 'PROG LANG AND TECH II', credits: '1' },
+    ...
+  ]
 ```
 
 Print all the CIS courses with their sections
