@@ -1,7 +1,7 @@
-Course Scraper
+UPenn Registrar Course Scraper
 ================
 
-## Quick Start
+# Quick Start
 
 To build the CoffeeScript simple run `npm install && cake build`
 
@@ -35,3 +35,8 @@ Scraper.getDepartments (depts) ->
     Scraper.getSections dept, (sections) ->
       console.log sections
 ```
+
+# Contributors
+
+- Geoffrey Vedernikoff <veg@seas.upenn.edu>
+- Ceasar Bautista <ceasarb@seas.upenn.edu>
