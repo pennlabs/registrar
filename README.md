@@ -3,6 +3,8 @@ Course Scraper
 
 ## Quick Start
 
+To build the CoffeeScript simple run `cake build`
+
 Create a scraper object
 ``` coffeescript
 Scraper = require "./scraper"
