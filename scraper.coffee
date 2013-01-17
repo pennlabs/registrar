@@ -92,7 +92,7 @@ module.exports =
 
     # Read each line in the roster of a department
     readRoster: (dept, parse, cb) ->
-      jsdom.env 'http://www.upenn.edu/registrar/roster/#{dept.toLowerCase()}.html', [JQUERY], (errors, window) ->
+      jsdom.env "http://www.upenn.edu/registrar/roster/#{dept.toLowerCase()}.html", [JQUERY], (errors, window) ->
         $ = window.$
         # Get each course block in the file and parse it
         blocks = $('pre p:last').text().split /\n\s*\n/
@@ -146,9 +146,16 @@ module.exports =
 
     toJSON: ->
       fs = require 'fs'
-      file_stream = fs.createWriteStream 'registrar.json'
+      file = fs.createWriteStream 'registrar.json'
       @getDepartments (depts) =>
-        for dept in depts
-          @getSections dept, (sections) =>
-            for section in sections
-              file_stream.write JSON.stringify section
+        console.log "Found #{depts.length} departments."
+        counter = 0
+        all_sections = []
+        depts.forEach (dept) =>
+          @getSections dept, (s) =>
+            console.log "Processing #{dept.trim()} sections..."
+            counter++
+            all_sections.push.apply all_sections, s
+            if counter == depts.length
+              console.log "\nFinished all #{depts.length} departments."
+              file.write JSON.stringify all_sections
