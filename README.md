@@ -14,6 +14,11 @@ Create a scraper object
 Scraper = require "./scraper"
 ```
 
+Export all the courses and sections for each department to JSON (registrar.json)
+``` coffeescript
+Scraper.toJSON()
+```
+
 Print the list of departments
 ``` coffeescript
 Scraper.getDepartments (depts) -> console.log depts
