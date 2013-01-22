@@ -141,7 +141,7 @@ module.exports =
         depts = []
         $(department_rows).find('tr').map (i, el) ->
           dept = $(el).find('td').eq(0).text()
-          depts.push dept
+          depts.push dept.trim()
         cb? depts
 
     toJSON: ->
@@ -153,7 +153,7 @@ module.exports =
         all_sections = []
         depts.forEach (dept) =>
           @getSections dept, (s) =>
-            console.log "Processing #{dept.trim()} sections..."
+            console.log "Processing #{dept} sections..."
             counter++
             all_sections.push.apply all_sections, s
             if counter == depts.length
