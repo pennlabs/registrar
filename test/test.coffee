@@ -14,18 +14,7 @@ describe 'getSections', () ->
       sections = _sections
       done()
   it "should get each section in a department", =>
-    expect(sections.length).to.equal(6)
-
-
-describe 'getDepartments', () ->
-  @timeout(0)
-  depts = null
-  before (done) =>
-    scraper.getDepartments (_depts) =>
-      depts = _depts
-      done()
-  it "should get each department", =>
-    expect(depts.length).to.equal(148)
+    expect(sections.length).to.equal(7)
 
 
 describe 'getCourses', () ->
@@ -38,6 +27,17 @@ describe 'getCourses', () ->
   it "should get each course in the department", =>
     # grek has 3 courses that are TBA so they have no sections
     expect(courses.length).to.equal(9)
+
+
+describe 'getDepartments', () ->
+  @timeout(0)
+  depts = null
+  before (done) =>
+    scraper.getDepartments (_depts) =>
+      depts = _depts
+      done()
+  it "should get each department", =>
+    expect(depts.length).to.equal(148)
 
 
 describe 'getDays', () ->
