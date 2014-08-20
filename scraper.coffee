@@ -95,7 +95,7 @@ module.exports =
       jsdom.env "http://www.upenn.edu/registrar/roster/#{dept.toLowerCase()}.html", [JQUERY], (errors, window) ->
         $ = window.$
         # Get each course block in the file and parse it
-        blocks = $('pre p:last').text().split /\n\s*\n/
+        blocks = $('pre p:nth-child(2)').text().split /\n\s*\n/
         blocks.forEach parse if parse
         cb? blocks
 
@@ -158,4 +158,5 @@ module.exports =
             all_sections.push.apply all_sections, s
             if counter == depts.length
               console.log "\nFinished all #{depts.length} departments."
+              console.log (JSON.stringify all_sections)
               file.write JSON.stringify all_sections
