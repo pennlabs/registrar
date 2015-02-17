@@ -1,6 +1,8 @@
 UPenn Registrar Course Scraper
 ================
 
+**DEPRECATED**: Use the [Penn OpenData Course Catalog service](https://esb.isc-seo.upenn.edu/8091/documentation/#coursecatalogsearchservice) instead.
+
 A CoffeeScript module that scrapes the UPenn Registrar. Please install [node](http://nodejs.org) and [CoffeeScript](http://coffeescript.org).
 
 # Quick Start
