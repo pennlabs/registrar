@@ -74,4 +74,4 @@ Scraper.getDepartments (depts) ->
 # Contributors
 
 - Geoffrey Vedernikoff <veg@seas.upenn.edu>
-- Ceasar Bautista <ceasarb@seas.upenn.edu>
+- Caesar Bautista <caesarb@seas.upenn.edu>
